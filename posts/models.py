@@ -9,3 +9,5 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['order']  # Esto hace que Django ordene los posts por defecto
+        
+   
