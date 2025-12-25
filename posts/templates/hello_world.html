@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario Hello World - Game Dev Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #5C94FC; /* Cielo clásico de Mario */
+            font-family: 'Press+Start+2P', cursive;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Suelo */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 200%;
+            height: 60px;
+            background: linear-gradient(to bottom, #944824 0%, #944824 10%, #E79430 10%, #E79430 20%, #944824 20%);
+            background-size: 40px 60px;
+            animation: moveGround 2s linear infinite;
+        }
+
+        @keyframes moveGround {
+            from { transform: translateX(0); }
+            to { transform: translateX(-40px); }
+        }
+
+        /* Personaje */
+        #mario {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            bottom: 60px;
+            left: 50px;
+            transition: transform 0.1s;
+            z-index: 10;
+        }
+
+        .mario-sprite {
+            font-size: 50px;
+            line-height: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Bloque de Pregunta */
+        .question-block {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #F7D018;
+            border: 4px solid #000;
+            top: calc(100vh - 250px);
+            left: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: inset -4px -4px 0px #A57100;
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        /* Mensaje de Hello World */
+        #message-box {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 4px solid black;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            z-index: 20;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+        }
+
+        /* UI Controls */
+        .controls-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-shadow: 2px 2px #000;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="controls-info">
+        HOLA MUNDO: MODO DESARROLLO<br>
+        - PRESIONA ESPACIO O CLICK PARA SALTAR<br>
+        - TOCA EL BLOQUE PARA SALUDAR
+    </div>
+
+    <!-- Nubes decorativas -->
+    <div class="cloud w-24 h-8 top-20 left-10"></div>
+    <div class="cloud w-32 h-10 top-40 left-1/2"></div>
+    <div class="cloud w-20 h-8 top-10 left-3/4"></div>
+
+    <!-- Bloque interactivo -->
+    <div id="block" class="question-block">?</div>
+
+    <!-- Mensaje de saludo -->
+    <div id="message-box">
+        <h1 class="text-xl mb-4">¡HELLO WORLD!</h1>
+        <p class="text-[10px]">Development Mode Active</p>
+    </div>
+
+    <!-- Personaje (Mario-esque) -->
+    <div id="mario">
+        <div class="mario-sprite">👨🏻‍🔧</div>
+    </div>
+
+    <!-- Suelo animado -->
+    <div class="ground"></div>
+</div>
+
+<script>
+    const mario = document.getElementById('mario');
+    const block = document.getElementById('block');
+    const messageBox = document.getElementById('message-box');
+    
+    let isJumping = false;
+    let gravity = 0.8;
+    let position = 60; // Altura inicial sobre el suelo
+    let velocity = 0;
+    
+    // Función de Salto
+    function jump() {
+        if (isJumping) return;
+        
+        isJumping = true;
+        velocity = 15; // Fuerza de impulso
+        
+        const jumpInterval = setInterval(() => {
+            // Aplicar gravedad
+            velocity -= gravity;
+            position += velocity;
+            
+            // Actualizar posición visual
+            mario.style.bottom = position + 'px';
+            
+            // Detección de colisión con el bloque (simulada)
+            const marioRect = mario.getBoundingClientRect();
+            const blockRect = block.getBoundingClientRect();
+            
+            if (
+                marioRect.top <= blockRect.bottom &&
+                marioRect.bottom >= blockRect.top &&
+                marioRect.right >= blockRect.left &&
+                marioRect.left <= blockRect.right &&
+                velocity > 0 // Solo al subir
+            ) {
+                hitBlock();
+            }
+
+            // Aterrizaje
+            if (position <= 60) {
+                clearInterval(jumpInterval);
+                position = 60;
+                mario.style.bottom = '60px';
+                isJumping = false;
+                velocity = 0;
+            }
+        }, 20);
+    }
+
+    function hitBlock() {
+        block.style.backgroundColor = '#ccc';
+        block.innerText = '!';
+        messageBox.style.display = 'block';
+        
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+            block.style.backgroundColor = '#F7D018';
+            block.innerText = '?';
+        }, 2000);
+    }
+
+    // Inputs
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowUp') {
+            jump();
+        }
+    });
+
+    document.addEventListener('mousedown', jump);
+    document.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        jump();
+    });
+
+</script>
+
+</body>
+</html>
