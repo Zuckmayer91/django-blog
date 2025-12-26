@@ -14,15 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
-from posts.api.views import PostApiView
 
+
+from django.contrib import admin
+from django.urls import path, include
+from posts.api.router import router_post  # Importa tu router aquí
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/posts',PostApiView.as_view() )
-    
+    # Esta línea es la que falta para que funcione /api/posts/
+    path('api/', include(router_post.urls)), 
 ]
-
 
