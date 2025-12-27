@@ -1,7 +1,9 @@
-
-from django.db import models    
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    # Por ahora déjalo así, luego añadimos campos de marketing
-    pass
+    web_site = models.CharField(max_length=255, blank=True)
+    twitter = models.CharField(max_length=255, blank=True)
+    facebook = models.CharField(max_length=255, blank=True)
+    instagram = models.CharField(max_length=255, blank=True)
+   
