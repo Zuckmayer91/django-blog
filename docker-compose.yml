@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Esto ayuda a que si haces cambios en el código, se reinicie solo
+    stdin_open: true
+    tty: true

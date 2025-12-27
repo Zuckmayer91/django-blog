@@ -1,3 +1,9 @@
+Password-linux
+bz_91
+AEDA286B#v
+
+
+django dashboard
 admin
 bz_91.k@hotmail.com
 AEDA286B#v
