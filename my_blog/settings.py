@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-on)ac=a^gt-i_j)h(khix_fp@^cbwfd^1oz$rvc-o4bv-^3qzb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -78,11 +77,14 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blog_db',         # Cambiado para coincidir con tu Compose
+        'USER': 'django_user',      # Cambiado para coincidir con tu Compose
+        'PASSWORD': 'django_pass',  # Cambiado para coincidir con tu Compose
+        'HOST': 'db',               # Esto está perfecto (es el nombre del servicio)
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

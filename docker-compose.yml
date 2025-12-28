@@ -1,12 +1,32 @@
+version: '3.8'
+
 services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=django_user
+      - POSTGRES_PASSWORD=django_pass
+      - POSTGRES_DB=blog_db
+
   web:
     build: .
+    # Agregamos 'sh -c' para que espere un poco a que la DB esté lista antes de arrancar
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     environment:
-      - PYTHONUNBUFFERED=1
-    # Esto ayuda a que si haces cambios en el código, se reinicie solo
-    stdin_open: true
-    tty: true
+      - DATABASE_URL=postgres://django_user:django_pass@db:5432/blog_db
+      - DJANGO_SETTINGS_MODULE=my_blog.settings # Fuerza a Django a encontrar tu nuevo settings
+      - PYTHONPATH=/app # Asegura que Python encuentre la carpeta my_blog
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
