@@ -21,7 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-on)ac=a^gt-i_j)h(khix_fp@^cbwfd^1oz$rvc-o4bv-^3qzb'
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'clave-secreta-por-defecto')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,11 +82,11 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog_db',         # Cambiado para coincidir con tu Compose
-        'USER': 'django_user',      # Cambiado para coincidir con tu Compose
-        'PASSWORD': 'django_pass',  # Cambiado para coincidir con tu Compose
-        'HOST': 'db',               # Esto está perfecto (es el nombre del servicio)
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -120,6 +122,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME':datetime.timedelta(days=7)
 }
+
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

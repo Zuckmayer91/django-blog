@@ -1,0 +1,53 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.mo
+*.pot
+*.log
+.pytest_cache/
+
+# --- Django ---
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+# Ignora archivos recolectados por collectstatic
+static_root/
+
+# --- Base de Datos y Secretos (CRÍTICO) ---
+.env
+*.sql
+*.dump
+
+# --- Docker ---
+.docker-compose.override.yml
+# Ignora los datos de la base de datos si usas volúmenes locales en carpetas
+postgres_data/
+
+# --- Editores y Sistema ---
+.vscode/
+.idea/
+.project
+.pydevproject
+.settings/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Otros ---
+.history/
+*.bak
