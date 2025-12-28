@@ -8,10 +8,15 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# Instalamos dependencias base para Python 3.13 y Django 6
+# Instalamos dependencias base para Python, PostgreSQL y PILLOW (Imágenes)
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    # --- LIBRERÍAS PARA IMÁGENES ---
+    libjpeg-dev \
+    zlib1g-dev \
+    libpng-dev \
+    # -------------------------------
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
@@ -25,4 +30,5 @@ COPY . /app/
 
 EXPOSE 8000
 
+# Nota: El comando CMD suele ser sobrescrito por el 'command' de tu docker-compose.yml
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

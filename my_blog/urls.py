@@ -18,31 +18,46 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from posts.api.router import router_post  # Importa tu router aquí
+from django.conf import settings # IMPORTANTE
+from django.conf.urls.static import static # IMPORTANTE
+
+from posts.api.router import router_post
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
-
 schema_view = get_schema_view(
    openapi.Info(
-      title="Documentación api 2",
+      title="API Blog Profesional",  # <--- Cambia esto
       default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      description="Documentación de los endpoints para el sistema de Blog", # <--- Cambia esto
+      terms_of_service="", # Puedes dejarlo vacío
+      contact=openapi.Contact(email="tu-email@dominio.com"),
+      license=openapi.License(name="MIT License"),
    ),
    public=True,
-  
 )
 
 
+from django.views.generic import RedirectView # Añade este import
 
+urlpatterns = [
+    # Añade esta línea al principio de urlpatterns:
+    path('', RedirectView.as_view(url='/docs/', permanent=False)),
+    
+    path('admin/', admin.site.urls),  
+    path('api/', include(router_post.urls)), 
+    # ... resto de tus urls
+]
 urlpatterns = [
    path('admin/', admin.site.urls),  
    path('api/', include(router_post.urls)), 
    path('api/', include('users.api.router')), 
    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-   
 ]
+
+# --- ESTO ES LO QUE DEBES AGREGAR ---
+# Permite que Django sirva archivos estáticos y de media durante el desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
